@@ -557,8 +557,8 @@
 <script>
 (() => {
   // ---------- Config ----------
-  const RACE_DATE_STR = "2026-05-17"; // fixed as requested
-  const PLAN_DAYS = 120;
+  const RACE_DATE_STR = "2026-05-17";
+  const PLAN_START_STR = "2026-01-19"; 
 
   const DAY_NAMES = ["Mo","Di","Mi","Do","Fr","Sa","So"];
   const DAY_KEYS = ["mon","tue","wed","thu","fri","sat","sun"];
@@ -616,7 +616,7 @@
   // ---------- Plan generation ----------
   // 26 weeks (approx) within 180 days; but we generate week blocks from startMonday to raceWeek inclusive.
   const raceDate = parseISODate(RACE_DATE_STR);
-  const planStart = addDays(raceDate, -PLAN_DAYS);
+  const planStart = parseISODate(PLAN_START_STR);
   const planStartMon = startOfWeekMonday(planStart);
   const raceWeekMon = startOfWeekMonday(raceDate);
 
