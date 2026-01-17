@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Halbmarathon Trainingsplan – Melina – 17.05.2026</title>
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.55);
+      --line: rgba(255,255,255,.14);
+      --good: #2ee59d;
+      --warn: #ffcc66;
+      --bad: #ff6b6b;
+      --accent: #8a5cff;
+      --accent2:#2dd4ff;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f6f7fb;
+        --card: rgba(0,0,0,.04);
+        --card2: rgba(0,0,0,.06);
+        --text: rgba(10,14,25,.92);
+        --muted: rgba(10,14,25,.70);
+        --muted2: rgba(10,14,25,.55);
+        --line: rgba(10,14,25,.12);
+        --shadow: 0 18px 50px rgba(0,0,0,.12);
+      }
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% -10%, rgba(138,92,255,.28), transparent 55%),
+        radial-gradient(900px 700px at 100% 0%, rgba(45,212,255,.24), transparent 60%),
+        radial-gradient(800px 600px at 30% 120%, rgba(46,229,157,.18), transparent 60%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    header{
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .titleCard{
+      flex: 1 1 520px;
+      background: linear-gradient(135deg, var(--card), transparent);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .titleCard::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background: radial-gradient(600px 220px at 20% 0%, rgba(138,92,255,.25), transparent 60%),
+                  radial-gradient(500px 200px at 80% 10%, rgba(45,212,255,.20), transparent 60%);
+      pointer-events:none;
+      opacity: .9;
+    }
+
+    .titleRow{
+      position: relative;
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+
+    .sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+      position: relative;
+    }
+
+    .badge{
+      position: relative;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      white-space: nowrap;
+    }
+
+    .quote{
+      margin-top: 12px;
+      position: relative;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+    }
+    .quote .spark{
+      width: 22px; height: 22px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(138,92,255,.85), rgba(45,212,255,.85));
+      flex: 0 0 auto;
+      margin-top: 2px;
+      box-shadow: 0 10px 30px rgba(138,92,255,.22);
+    }
+    .quote p{ margin:0; font-size: 14px; color: var(--muted); }
+    .quote strong{ color: var(--text); font-weight: 650; }
+
+    .statsCard{
+      flex: 0 0 360px;
+      background: linear-gradient(135deg, var(--card), transparent);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 16px 14px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mini{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 10px 10px 9px;
+    }
+    .mini .k{ color: var(--muted2); font-size: 12px; }
+    .mini .v{ margin-top: 6px; font-family: var(--mono); font-size: 13px; color: var(--text); }
+
+    .progressBlock{
+      margin-top: 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 10px;
+    }
+    .progressTop{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .bar{
+      height: 12px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.12);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--good));
+      border-radius: 999px;
+      transition: width .35s ease;
+    }
+    .barHint{
+      margin-top: 8px;
+      display:flex;
+      justify-content: space-between;
+      color: var(--muted2);
+      font-size: 12px;
+      gap: 10px;
+    }
+
+    main{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items:start;
+    }
+
+    @media (max-width: 980px){
+      main{ grid-template-columns: 1fr; }
+      .statsCard{ flex-basis: 100%; }
+    }
+
+    .panel{
+      background: linear-gradient(135deg, var(--card), transparent);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .panelHeader{
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+    }
+
+    .panelHeader h2{
+      margin:0;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    select, button{
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      outline: none;
+    }
+    select:focus, button:focus{
+      box-shadow: 0 0 0 3px rgba(138,92,255,.20);
+      border-color: rgba(138,92,255,.45);
+    }
+    button{
+      cursor:pointer;
+      background: linear-gradient(135deg, rgba(138,92,255,.35), rgba(45,212,255,.18));
+    }
+    button:hover{ filter: brightness(1.05); }
+    button.ghost{
+      background: rgba(255,255,255,.05);
+    }
+    button.danger{
+      background: rgba(255,107,107,.15);
+      border-color: rgba(255,107,107,.35);
+    }
+
+    .weekNav{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .weekTitle{
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .weekBody{
+      padding: 14px 16px 16px;
+    }
+
+    .weekMeta{
+      display:flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .sessions{
+      display:grid;
+      gap: 10px;
+    }
+
+    .session{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: var(--radius2);
+      padding: 10px 10px 10px;
+      display:grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 10px;
+      align-items:start;
+    }
+
+    .session.done{
+      opacity: .78;
+      background: rgba(46,229,157,.10);
+      border-color: rgba(46,229,157,.28);
+    }
+
+    .check{
+      width: 22px; height: 22px;
+      border-radius: 8px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      margin-top: 2px;
+      user-select:none;
+    }
+    .session.done .check{
+      background: rgba(46,229,157,.18);
+      border-color: rgba(46,229,157,.40);
+    }
+
+    .sTitle{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .pill.hard{ color: var(--warn); border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.10); }
+    .pill.easy{ color: var(--good); border-color: rgba(46,229,157,.30); background: rgba(46,229,157,.08); }
+    .pill.str{ color: var(--accent2); border-color: rgba(45,212,255,.35); background: rgba(45,212,255,.10); }
+
+    .sName{
+      font-weight: 650;
+      letter-spacing: .1px;
+    }
+
+    .sDesc{
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .sRight{
+      display:flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items:flex-end;
+      min-width: 180px;
+    }
+
+    .daySel{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      justify-content:flex-end;
+      width:100%;
+      color: var(--muted2);
+      font-size: 12px;
+    }
+
+    .daySel select{ width: 120px; }
+
+    .warnLine{
+      margin-top: 10px;
+      color: rgba(255,204,102,.95);
+      font-size: 12px;
+      border: 1px solid rgba(255,204,102,.30);
+      background: rgba(255,204,102,.08);
+      padding: 10px 10px;
+      border-radius: 14px;
+      display:none;
+    }
+
+    .side{
+      padding: 14px 16px 16px;
+    }
+
+    .side h3{
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    .list{
+      display:grid;
+      gap: 10px;
+    }
+
+    .tip{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: 14px;
+      padding: 10px 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .tip strong{ color: var(--text); }
+
+    .footer{
+      margin-top: 14px;
+      color: var(--muted2);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="titleCard">
+        <div class="titleRow">
+          <h1>Halbmarathon Trainingsplan – <span style="color:var(--accent2)">Melina</span></h1>
+          <span class="badge" id="raceBadge">Race: 17.05.2026</span>
+        </div>
+        <p class="sub">
+          Ziel: sicher finishen, ohne Drama. Du startest als Einsteigerin (bisher ~2×/Woche 4 km). Der Plan baut kontrolliert auf:
+          <strong>Easy Runs</strong> (Grundlage), <strong>Long Runs</strong> (Ausdauer), etwas <strong>Tempo</strong> (ökonomischer laufen) + <strong>Strength</strong> (verletzungspräventiv).
+        </p>
+
+        <div class="quote">
+          <div class="spark"></div>
+          <p><strong id="quoteStrong">Motivation</strong><br><span id="quoteText"></span></p>
+        </div>
+      </div>
+
+      <div class="statsCard">
+        <div class="grid2">
+          <div class="mini">
+            <div class="k">Heute</div>
+            <div class="v" id="todayText">–</div>
+          </div>
+          <div class="mini">
+            <div class="k">Tage bis Race</div>
+            <div class="v" id="daysLeft">–</div>
+          </div>
+          <div class="mini">
+            <div class="k">Planstart (180 Tage)</div>
+            <div class="v" id="planStartText">–</div>
+          </div>
+          <div class="mini">
+            <div class="k">Aktuelle Woche</div>
+            <div class="v" id="currentWeekText">–</div>
+          </div>
+        </div>
+
+        <div class="progressBlock">
+          <div class="progressTop">
+            <span id="progressLabel">Gesamtfortschritt</span>
+            <span class="badge" id="progressPct">0%</span>
+          </div>
+          <div class="bar"><div id="progressBar"></div></div>
+          <div class="barHint">
+            <span id="trainProgressText">Training: 0/0</span>
+            <span id="timeProgressText">Zeit: 0%</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="panelHeader">
+          <div class="weekNav">
+            <button class="ghost" id="prevWeek">← Woche</button>
+            <button class="ghost" id="nextWeek">Woche →</button>
+            <span class="weekTitle" id="weekTitle">–</span>
+          </div>
+          <div class="controls">
+            <select id="jumpWeek"></select>
+            <button id="jumpCurrent">Zur aktuellen Woche</button>
+            <button class="danger" id="resetAll">Reset (alles)</button>
+          </div>
+        </div>
+
+        <div class="weekBody">
+          <div class="weekMeta">
+            <div id="weekDates">–</div>
+            <div id="weekSummary">–</div>
+          </div>
+
+          <div class="sessions" id="sessions"></div>
+
+          <div class="warnLine" id="warnLine"></div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelHeader">
+          <h2>Regeln & Tipps (damit’s klappt)</h2>
+          <div class="badge">Smart & safe</div>
+        </div>
+        <div class="side">
+          <div class="list">
+            <div class="tip"><strong>Easy heißt wirklich easy:</strong> Du solltest dabei sprechen können (Talk-Test). Wenn du keuchst, bist du zu schnell.</div>
+            <div class="tip"><strong>Long Run = langsam + konstant:</strong> Kein Wettkampf. Ziel ist „Zeit auf den Beinen“.</div>
+            <div class="tip"><strong>Steigerung:</strong> Wir erhöhen die Long Runs schrittweise und bauen alle 3–4 Wochen eine leichtere Woche ein (Deload).</div>
+            <div class="tip"><strong>Strength (20–30 Min):</strong> Glutes, Core, Waden, hintere Kette. Das ist Verletzungs-Prevention (Injury Prevention).</div>
+            <div class="tip"><strong>Verschieben:</strong> Du kannst Einheiten in der Woche umlegen – aber <em>nicht</em> zwei Einheiten am selben Tag. Das verhindert Überlastung.</div>
+          </div>
+
+          <div class="footer">
+            Bedienung: Einheit abhaken über das Kästchen. Tag ändern über Dropdown rechts.
+            Alles wird in <span class="kbd">localStorage</span> gespeichert (lokaler Browser-Cache).
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+<script>
+(() => {
+  // ---------- Config ----------
+  const RACE_DATE_STR = "2026-05-17"; // fixed as requested
+  const PLAN_DAYS = 180;
+
+  const DAY_NAMES = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+  const DAY_KEYS = ["mon","tue","wed","thu","fri","sat","sun"];
+
+  const QUOTES = [
+    "Heute brauchst du keine Motivation. Du brauchst nur die <strong>erste Minute</strong>.",
+    "Langsam laufen ist kein Fehler – es ist <strong>Trainingsintelligenz</strong>.",
+    "Disziplin ist: starten, obwohl du noch nicht in Stimmung bist.",
+    "Du trainierst nicht nur Beine. Du trainierst <strong>Vertrauen</strong> in dich.",
+    "Wenn’s leicht wäre, wäre es kein Ziel. Mach’s trotzdem.",
+    "Konstanz schlägt Talent. Heute ist ein Konstanz-Tag.",
+    "Dein Future-You wird dir für diesen Lauf danken.",
+    "Ziel: nicht perfekt. Ziel: <strong>gemacht</strong>."
+  ];
+
+  // Default day pattern: Tue/Thu/Sun for runs (+ optional strength on Sat later)
+  const DEFAULT_DAYS = {
+    easy1: "tue",
+    quality: "thu",
+    long: "sun",
+    strength: "sat"
+  };
+
+  // ---------- Date helpers ----------
+  const toLocalDate = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const parseISODate = (iso) => {
+    const [y,m,dd] = iso.split("-").map(Number);
+    return new Date(y, m-1, dd);
+  };
+  const fmtDate = (d) => {
+    const dd = String(d.getDate()).padStart(2,"0");
+    const mm = String(d.getMonth()+1).padStart(2,"0");
+    const yy = d.getFullYear();
+    return `${dd}.${mm}.${yy}`;
+  };
+  const addDays = (d, n) => {
+    const x = new Date(d);
+    x.setDate(x.getDate()+n);
+    return x;
+  };
+  const diffDays = (a, b) => {
+    // b - a in days
+    const A = toLocalDate(a).getTime();
+    const B = toLocalDate(b).getTime();
+    return Math.round((B - A) / (1000*60*60*24));
+  };
+  const startOfWeekMonday = (d) => {
+    // Monday as first day
+    const x = toLocalDate(d);
+    const day = (x.getDay()+6)%7; // Mon=0 ... Sun=6
+    return addDays(x, -day);
+  };
+  const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
+
+  // ---------- Plan generation ----------
+  // 26 weeks (approx) within 180 days; but we generate week blocks from startMonday to raceWeek inclusive.
+  const raceDate = parseISODate(RACE_DATE_STR);
+  const planStart = addDays(raceDate, -PLAN_DAYS);
+  const planStartMon = startOfWeekMonday(planStart);
+  const raceWeekMon = startOfWeekMonday(raceDate);
+
+  const totalWeeks = Math.max(1, Math.floor(diffDays(planStartMon, addDays(raceWeekMon, 6)) / 7) + 1);
+
+  // Long-run progression (km) for beginner, with periodic deload + taper
+  // We’ll map by week index (1..totalWeeks). Final long run peaks ~18–20km, then taper.
+  function longRunKmForWeek(w){
+    // 1-based week
+    const base = [5,6,7,8,6,9,10,11,8,12,13,14,10,15,16,17,12,18,16,14,12,10,8,6];
+    // If totalWeeks differs, we scale by picking from base with interpolation-ish:
+    const idx = Math.round((w-1) * (base.length-1) / (totalWeeks-1 || 1));
+    return base[clamp(idx,0,base.length-1)];
+  }
+
+  function buildWeekTemplate(w){
+    // W is 1-based
+    const longKm = longRunKmForWeek(w);
+
+    // Determine phase
+    const weeksToRace = (totalWeeks - w);
+    const isTaper = weeksToRace <= 2;     // last ~2-3 weeks easier
+    const isPeak = weeksToRace >= 3 && weeksToRace <= 7; // around peak block
+
+    // Runs per week: start 2, then 3. Strength introduced gradually.
+    const runs = (w <= 2) ? 2 : 3;
+
+    const easyKm = (w <= 2) ? 4 : clamp(4 + Math.floor((w-1)/3), 4, 8);
+    const qualityKm = clamp(4 + Math.floor((w-1)/4), 4, 8);
+
+    const sessions = [];
+
+    // Easy run 1
+    sessions.push({
+      id: `w${w}-easy1`,
+      type: "easy",
+      name: `Easy Run ${easyKm} km`,
+      desc: `Locker (Talk-Test). Fokus: ruhiger Rhythmus, saubere Haltung. Optional: 4×20s „Strides“ (lockere Steigerungen) am Ende.`,
+      defaultDay: DEFAULT_DAYS.easy1,
+      hard: false
+    });
+
+    if (runs >= 3){
+      // Quality session: tempo or intervals (light for beginner)
+      let name, desc;
+      if (w <= 4){
+        name = `Easy + Technik (${qualityKm}–${qualityKm+1} km)`;
+        desc = `Sehr locker, danach 6–8 Minuten Lauf-ABC/Technik (z. B. Kniehebelauf, Anfersen, Skippings). Kein Ballern.`;
+      } else if (w <= 10){
+        name = `Tempo-Einstieg (${qualityKm}–${qualityKm+2} km)`;
+        desc = `10 Min easy → 2×6–8 Min „comfortably hard“ (zäh, aber kontrolliert) mit 3 Min locker dazwischen → auslaufen.`;
+      } else if (w <= 18){
+        name = `Intervalle light (${qualityKm}–${qualityKm+3} km)`;
+        desc = `10 Min easy → 4–6×3 Min zügig (nicht sprinten) mit 2 Min locker → auslaufen. Ziel: ökonomischer laufen.`;
+      } else if (!isTaper){
+        name = `Tempo/Schwelle (${qualityKm}–${qualityKm+2} km)`;
+        desc = `10 Min easy → 15–20 Min steady/Schwelle (kontrolliert hart) → auslaufen.`;
+      } else {
+        name = `Locker + 4×20s Strides (${qualityKm}–${qualityKm+1} km)`;
+        desc = `Taper: insgesamt locker. Nur kurze Strides für „Bein-Snap“, nicht ermüden.`;
+      }
+
+      sessions.push({
+        id: `w${w}-quality`,
+        type: "quality",
+        name,
+        desc,
+        defaultDay: DEFAULT_DAYS.quality,
+        hard: true
+      });
+    }
+
+    // Long run
+    let longDesc = `Sehr locker. Trinken mitnehmen ab ~60 Min. Ziel: konstant, ruhig.`;
+    if (longKm >= 14) longDesc += ` Optional: die letzten 2–3 km minimal schneller, aber immer kontrolliert.`;
+    if (isTaper) longDesc = `Taper-Long: locker bleiben, du „sparst“ Energie fürs Rennen.`;
+
+    sessions.push({
+      id: `w${w}-long`,
+      type: "long",
+      name: `Long Run ${longKm} km`,
+      desc: longDesc,
+      defaultDay: DEFAULT_DAYS.long,
+      hard: true
+    });
+
+    // Strength: start gently after week 2; optional + short
+    const strengthOn = (w >= 3);
+    if (strengthOn){
+      const strName = (w < 8) ? "Strength 20 Min (leicht)" : "Strength 25–30 Min";
+      const strDesc =
+        "Glutes/Core/Waden: z. B. 2–3 Runden: 10–12 Squats, 10 Ausfallschritte je Seite, 12 Hip Hinge (RDL ohne Gewicht), 30–45s Plank, 12 Calf Raises. Sauber > schwer.";
+      sessions.push({
+        id: `w${w}-strength`,
+        type: "strength",
+        name: strName,
+        desc: strDesc,
+        defaultDay: DEFAULT_DAYS.strength,
+        hard: false
+      });
+    }
+
+    // If only 2 runs early, remove quality and strength optionally
+    if (runs === 2){
+      // Keep easy + long only; no strength in first 2 weeks
+      return {
+        week: w,
+        sessions: sessions.filter(s => s.id.includes("easy1") || s.id.includes("long"))
+      };
+    }
+
+    // During taper: keep strength but lighter (still ok)
+    if (isTaper){
+      // Keep everything but encourage reduced effort; we keep strength
+    }
+
+    return { week: w, sessions };
+  }
+
+  const plan = Array.from({length: totalWeeks}, (_,i) => buildWeekTemplate(i+1));
+
+  // ---------- Persistence ----------
+  const STORAGE_KEY = `hm_plan_${RACE_DATE_STR}_v1`;
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){ return null; }
+  }
+  function saveState(state){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function defaultState(){
+    const perSession = {};
+    for (const w of plan){
+      for (const s of w.sessions){
+        perSession[s.id] = {
+          done: false,
+          day: s.defaultDay
+        };
+      }
+    }
+    return {
+      meta: {
+        raceDate: RACE_DATE_STR,
+        planDays: PLAN_DAYS,
+        createdAt: new Date().toISOString()
+      },
+      perSession
+    };
+  }
+
+  let state = loadState();
+  if (!state || !state.perSession) {
+    state = defaultState();
+    saveState(state);
+  } else {
+    // Merge new sessions if plan template changed
+    const def = defaultState();
+    for (const [id,val] of Object.entries(def.perSession)){
+      if (!state.perSession[id]) state.perSession[id] = val;
+      if (typeof state.perSession[id].done !== "boolean") state.perSession[id].done = false;
+      if (!state.perSession[id].day) state.perSession[id].day = val.day;
+    }
+    saveState(state);
+  }
+
+  // ---------- UI ----------
+  const $ = (id) => document.getElementById(id);
+
+  function setQuote(){
+    const q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+    $("quoteStrong").textContent = "Heute";
+    $("quoteText").innerHTML = q;
+  }
+
+  function sessionTypePill(s){
+    if (s.type === "easy") return `<span class="pill easy">EASY</span>`;
+    if (s.type === "quality") return `<span class="pill hard">QUALITY</span>`;
+    if (s.type === "long") return `<span class="pill hard">LONG</span>`;
+    if (s.type === "strength") return `<span class="pill str">STRENGTH</span>`;
+    return `<span class="pill">TRAIN</span>`;
+  }
+
+  function weekDateRange(wIndex0){
+    const weekMon = addDays(planStartMon, wIndex0*7);
+    const weekSun = addDays(weekMon, 6);
+    return { weekMon, weekSun };
+  }
+
+  function countProgress(){
+    let total = 0, done = 0;
+    for (const w of plan){
+      for (const s of w.sessions){
+        total++;
+        if (state.perSession[s.id]?.done) done++;
+      }
+    }
+    return { total, done };
+  }
+
+  function timeProgress(){
+    const today = toLocalDate(new Date());
+    const start = toLocalDate(planStart);
+    const end = toLocalDate(raceDate);
+    const total = Math.max(1, diffDays(start, end));
+    const passed = clamp(diffDays(start, today), 0, total);
+    return Math.round((passed/total)*100);
+  }
+
+  function combinedProgressPct(){
+    // simple blend: 65% training completion, 35% time progress
+    const tp = timeProgress();
+    const {total, done} = countProgress();
+    const tr = total ? Math.round((done/total)*100) : 0;
+    return Math.round(tr*0.65 + tp*0.35);
+  }
+
+  function dayKeyToLabel(k){
+    const idx = DAY_KEYS.indexOf(k);
+    return idx >= 0 ? DAY_NAMES[idx] : "–";
+  }
+
+  function buildJumpWeeks(){
+    const sel = $("jumpWeek");
+    sel.innerHTML = "";
+    for (let i=0;i<totalWeeks;i++){
+      const o = document.createElement("option");
+      o.value = String(i);
+      o.textContent = `Woche ${i+1}`;
+      sel.appendChild(o);
+    }
+  }
+
+  function currentWeekIndex(){
+    const today = toLocalDate(new Date());
+    const idx = Math.floor(diffDays(planStartMon, today)/7);
+    return clamp(idx, 0, totalWeeks-1);
+  }
+
+  function weekSummaryText(w){
+    // km estimate: sum only run-type sessions
+    let km = 0;
+    for (const s of w.sessions){
+      const m = s.name.match(/(\d+)\s*km/i);
+      if (m) km += Number(m[1]);
+    }
+    const hardCount = w.sessions.filter(x => x.hard).length;
+    return `Einheiten: ${w.sessions.length} · Lauf-km (ca.): ${km} · „Härtere“ Einheiten: ${hardCount}`;
+  }
+
+  function validateNoCollisions(w){
+    const used = new Map(); // dayKey -> sessionId
+    const collisions = [];
+    for (const s of w.sessions){
+      const day = state.perSession[s.id]?.day || s.defaultDay;
+      if (used.has(day)) collisions.push([day, used.get(day), s.id]);
+      else used.set(day, s.id);
+    }
+    return collisions;
+  }
+
+  function renderWeek(wIndex0){
+    const w = plan[wIndex0];
+    const {weekMon, weekSun} = weekDateRange(wIndex0);
+
+    $("weekTitle").textContent = `Woche ${w.week} von ${totalWeeks}`;
+    $("weekDates").textContent = `${fmtDate(weekMon)} – ${fmtDate(weekSun)}`;
+    $("weekSummary").textContent = weekSummaryText(w);
+
+    $("jumpWeek").value = String(wIndex0);
+
+    const container = $("sessions");
+    container.innerHTML = "";
+
+    // sort sessions by day index (for nicer view)
+    const sessionsSorted = [...w.sessions].sort((a,b) => {
+      const da = DAY_KEYS.indexOf(state.perSession[a.id]?.day || a.defaultDay);
+      const db = DAY_KEYS.indexOf(state.perSession[b.id]?.day || b.defaultDay);
+      return da - db;
+    });
+
+    for (const s of sessionsSorted){
+      const st = state.perSession[s.id] || {done:false, day:s.defaultDay};
+      const dayLabel = dayKeyToLabel(st.day);
+
+      const div = document.createElement("div");
+      div.className = "session" + (st.done ? " done" : "");
+      div.dataset.sid = s.id;
+
+      div.innerHTML = `
+        <div class="check" title="Abhaken" role="button" aria-label="Abhaken">${st.done ? "✓" : ""}</div>
+        <div>
+          <div class="sTitle">
+            ${sessionTypePill(s)}
+            <span class="sName">${s.name}</span>
+            <span class="pill" title="Geplant für diesen Tag">${dayLabel}</span>
+          </div>
+          <div class="sDesc">${s.desc}</div>
+        </div>
+        <div class="sRight">
+          <div class="daySel">
+            <span>Tag</span>
+            <select aria-label="Tag ändern">
+              ${DAY_KEYS.map(k => `<option value="${k}" ${k===st.day ? "selected":""}>${dayKeyToLabel(k)}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+      `;
+
+      // Toggle done
+      div.querySelector(".check").addEventListener("click", () => {
+        const cur = state.perSession[s.id] || {done:false, day:s.defaultDay};
+        cur.done = !cur.done;
+        state.perSession[s.id] = cur;
+        saveState(state);
+        updateTopProgress();
+        renderWeek(wIndex0);
+      });
+
+      // Change day with collision logic
+      const sel = div.querySelector("select");
+      sel.addEventListener("change", () => {
+        const newDay = sel.value;
+        const cur = state.perSession[s.id] || {done:false, day:s.defaultDay};
+
+        // check collision inside this week
+        const taken = new Set();
+        for (const other of w.sessions){
+          if (other.id === s.id) continue;
+          const od = state.perSession[other.id]?.day || other.defaultDay;
+          taken.add(od);
+        }
+        if (taken.has(newDay)){
+          // revert + show warning
+          sel.value = cur.day;
+          showWarning(`Nicht erlaubt: Es gibt in dieser Woche bereits eine Einheit am ${dayKeyToLabel(newDay)}. (Regel: keine 2 Einheiten am selben Tag.)`);
+          return;
+        }
+
+        cur.day = newDay;
+        state.perSession[s.id] = cur;
+        saveState(state);
+        hideWarning();
+        renderWeek(wIndex0);
+      });
+
+      container.appendChild(div);
+    }
+
+    // week collision check (should not happen unless state edited externally)
+    const col = validateNoCollisions(w);
+    if (col.length){
+      showWarning("Achtung: In dieser Woche kollidieren Einheiten auf dem gleichen Tag. Bitte passe die Tage rechts an.");
+    } else {
+      hideWarning();
+    }
+  }
+
+  function showWarning(msg){
+    const w = $("warnLine");
+    w.textContent = msg;
+    w.style.display = "block";
+  }
+  function hideWarning(){
+    const w = $("warnLine");
+    w.style.display = "none";
+    w.textContent = "";
+  }
+
+  function updateTopProgress(){
+    const today = toLocalDate(new Date());
+    $("todayText").textContent = fmtDate(today);
+
+    const left = diffDays(today, raceDate);
+    $("daysLeft").textContent = String(Math.max(0, left));
+
+    $("planStartText").textContent = fmtDate(planStart);
+
+    const cw = currentWeekIndex()+1;
+    $("currentWeekText").textContent = `Woche ${cw}/${totalWeeks}`;
+
+    const tp = timeProgress();
+    const {total, done} = countProgress();
+    const tr = total ? Math.round((done/total)*100) : 0;
+    const combo = combinedProgressPct();
+
+    $("trainProgressText").textContent = `Training: ${done}/${total} (${tr}%)`;
+    $("timeProgressText").textContent = `Zeit: ${tp}%`;
+
+    $("progressPct").textContent = `${combo}%`;
+    $("progressBar").style.width = `${combo}%`;
+
+    // label text
+    const label = (left <= 0) ? "Race Day 🎉" : "Gesamtfortschritt bis zum Race";
+    $("progressLabel").textContent = label;
+  }
+
+  function resetAll(){
+    // Hard reset
+    localStorage.removeItem(STORAGE_KEY);
+    state = defaultState();
+    saveState(state);
+    updateTopProgress();
+    renderWeek(currentWeekIndex());
+  }
+
+  // ---------- Init ----------
+  setQuote();
+  buildJumpWeeks();
+  updateTopProgress();
+
+  let weekIdx = currentWeekIndex();
+  renderWeek(weekIdx);
+
+  $("prevWeek").addEventListener("click", () => {
+    weekIdx = clamp(weekIdx-1, 0, totalWeeks-1);
+    renderWeek(weekIdx);
+  });
+  $("nextWeek").addEventListener("click", () => {
+    weekIdx = clamp(weekIdx+1, 0, totalWeeks-1);
+    renderWeek(weekIdx);
+  });
+  $("jumpWeek").addEventListener("change", (e) => {
+    weekIdx = Number(e.target.value);
+    renderWeek(weekIdx);
+  });
+  $("jumpCurrent").addEventListener("click", () => {
+    weekIdx = currentWeekIndex();
+    renderWeek(weekIdx);
+  });
+  $("resetAll").addEventListener("click", () => {
+    const ok = confirm("Wirklich alles zurücksetzen? Alle Haken & Verschiebungen gehen verloren.");
+    if (ok) resetAll();
+  });
+
+})();
+</script>
+</body>
+</html>
