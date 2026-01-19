@@ -1,4 +1,3 @@
-<!-- redeploy -->
 <!doctype html>
 <html lang="de">
 <head>
@@ -482,7 +481,7 @@
             <div class="v" id="daysLeft">–</div>
           </div>
           <div class="mini">
-            <div class="k">Planstart (180 Tage)</div>
+            <div class="k">Planstart</div>
             <div class="v" id="planStartText">–</div>
           </div>
           <div class="mini">
@@ -534,11 +533,40 @@
 
       <aside class="panel">
         <div class="panelHeader">
-          <h2>Regeln & Tipps (damit’s klappt)</h2>
-          <div class="badge">Smart & safe</div>
+          <h2>Stats & Prognose</h2>
+          <div class="badge">Live</div>
         </div>
         <div class="side">
-          <div class="list">
+          <div class="grid2">
+            <div class="mini">
+              <div class="k">Gesamtkilometer</div>
+              <div class="v" id="totKm">0.0 km</div>
+            </div>
+            <div class="mini">
+              <div class="k">Gesamtzeit</div>
+              <div class="v" id="totTime">0:00</div>
+            </div>
+            <div class="mini">
+              <div class="k">Ø Pace</div>
+              <div class="v" id="avgPace">–</div>
+            </div>
+            <div class="mini">
+              <div class="k">HM-Prognose</div>
+              <div class="v" id="hmPred">–</div>
+            </div>
+          </div>
+
+          <div class="tip" style="margin-top:10px">
+            <strong id="predictMsgTitle">Motivation</strong><br/>
+            <span id="predictMsg" class="muted">Trage nach dem Lauf km + Zeit ein. Dann bekommst du eine realistische Halbmarathon-Prognose.</span>
+          </div>
+
+          <div class="panelHeader" style="margin-top:14px;border-radius:14px;border:1px solid var(--line);">
+            <h2 style="font-size:14px;margin:0">Regeln & Tipps (damit’s klappt)</h2>
+            <div class="badge">Smart & safe</div>
+          </div>
+
+          <div class="list" style="margin-top:10px">
             <div class="tip"><strong>Easy heißt wirklich easy:</strong> Du solltest dabei sprechen können (Talk-Test). Wenn du keuchst, bist du zu schnell.</div>
             <div class="tip"><strong>Long Run = langsam + konstant:</strong> Kein Wettkampf. Ziel ist „Zeit auf den Beinen“.</div>
             <div class="tip"><strong>Steigerung:</strong> Wir erhöhen die Long Runs schrittweise und bauen alle 3–4 Wochen eine leichtere Woche ein (Deload).</div>
@@ -548,7 +576,7 @@
 
           <div class="footer">
             Bedienung: Einheit abhaken über das Kästchen. Tag ändern über Dropdown rechts.
-            Alles wird in <span class="kbd">localStorage</span> gespeichert (lokaler Browser-Cache).
+            Neu: Km + Zeit eintragen. Alles wird in <span class="kbd">localStorage</span> gespeichert.
           </div>
         </div>
       </aside>
@@ -559,11 +587,13 @@
 (() => {
   // ---------- Config ----------
   const RACE_DATE_STR = "2026-05-17";
-  const PLAN_START_STR = "2026-01-19"; 
-  const PLAN_DAYS = 119;
+  const PLAN_START_STR = "2026-01-19"; // gewünschter Start
+  const PLAN_DAYS = 180; // bleibt für Meta/Anzeige & Kompatibilität erhalten
 
   const DAY_NAMES = ["Mo","Di","Mi","Do","Fr","Sa","So"];
   const DAY_KEYS = ["mon","tue","wed","thu","fri","sat","sun"];
+
+  const HM_DISTANCE_KM = 21.0975;
 
   const QUOTES = [
     "Heute brauchst du keine Motivation. Du brauchst nur die <strong>erste Minute</strong>.",
@@ -616,7 +646,6 @@
   const clamp = (v,min,max) => Math.max(min, Math.min(max, v));
 
   // ---------- Plan generation ----------
-  // 26 weeks (approx) within 180 days; but we generate week blocks from startMonday to raceWeek inclusive.
   const raceDate = parseISODate(RACE_DATE_STR);
   const planStart = parseISODate(PLAN_START_STR);
   const planStartMon = startOfWeekMonday(planStart);
@@ -624,26 +653,18 @@
 
   const totalWeeks = Math.max(1, Math.floor(diffDays(planStartMon, addDays(raceWeekMon, 6)) / 7) + 1);
 
-  // Long-run progression (km) for beginner, with periodic deload + taper
-  // We’ll map by week index (1..totalWeeks). Final long run peaks ~18–20km, then taper.
   function longRunKmForWeek(w){
-    // 1-based week
     const base = [5,6,7,8,6,9,10,11,8,12,13,14,10,15,16,17,12,18,16,14,12,10,8,6];
-    // If totalWeeks differs, we scale by picking from base with interpolation-ish:
     const idx = Math.round((w-1) * (base.length-1) / (totalWeeks-1 || 1));
     return base[clamp(idx,0,base.length-1)];
   }
 
   function buildWeekTemplate(w){
-    // W is 1-based
     const longKm = longRunKmForWeek(w);
 
-    // Determine phase
     const weeksToRace = (totalWeeks - w);
-    const isTaper = weeksToRace <= 2;     // last ~2-3 weeks easier
-    const isPeak = weeksToRace >= 3 && weeksToRace <= 7; // around peak block
+    const isTaper = weeksToRace <= 2;
 
-    // Runs per week: start 2, then 3. Strength introduced gradually.
     const runs = (w <= 2) ? 2 : 3;
 
     const easyKm = (w <= 2) ? 4 : clamp(4 + Math.floor((w-1)/3), 4, 8);
@@ -651,18 +672,17 @@
 
     const sessions = [];
 
-    // Easy run 1
     sessions.push({
       id: `w${w}-easy1`,
       type: "easy",
       name: `Easy Run ${easyKm} km`,
       desc: `Locker (Talk-Test). Fokus: ruhiger Rhythmus, saubere Haltung. Optional: 4×20s „Strides“ (lockere Steigerungen) am Ende.`,
       defaultDay: DEFAULT_DAYS.easy1,
-      hard: false
+      hard: false,
+      isRun: true
     });
 
     if (runs >= 3){
-      // Quality session: tempo or intervals (light for beginner)
       let name, desc;
       if (w <= 4){
         name = `Easy + Technik (${qualityKm}–${qualityKm+1} km)`;
@@ -687,11 +707,11 @@
         name,
         desc,
         defaultDay: DEFAULT_DAYS.quality,
-        hard: true
+        hard: true,
+        isRun: true
       });
     }
 
-    // Long run
     let longDesc = `Sehr locker. Trinken mitnehmen ab ~60 Min. Ziel: konstant, ruhig.`;
     if (longKm >= 14) longDesc += ` Optional: die letzten 2–3 km minimal schneller, aber immer kontrolliert.`;
     if (isTaper) longDesc = `Taper-Long: locker bleiben, du „sparst“ Energie fürs Rennen.`;
@@ -702,10 +722,10 @@
       name: `Long Run ${longKm} km`,
       desc: longDesc,
       defaultDay: DEFAULT_DAYS.long,
-      hard: true
+      hard: true,
+      isRun: true
     });
 
-    // Strength: start gently after week 2; optional + short
     const strengthOn = (w >= 3);
     if (strengthOn){
       const strName = (w < 8) ? "Strength 20 Min (leicht)" : "Strength 25–30 Min";
@@ -717,22 +737,16 @@
         name: strName,
         desc: strDesc,
         defaultDay: DEFAULT_DAYS.strength,
-        hard: false
+        hard: false,
+        isRun: false
       });
     }
 
-    // If only 2 runs early, remove quality and strength optionally
     if (runs === 2){
-      // Keep easy + long only; no strength in first 2 weeks
       return {
         week: w,
         sessions: sessions.filter(s => s.id.includes("easy1") || s.id.includes("long"))
       };
-    }
-
-    // During taper: keep strength but lighter (still ok)
-    if (isTaper){
-      // Keep everything but encourage reduced effort; we keep strength
     }
 
     return { week: w, sessions };
@@ -741,7 +755,7 @@
   const plan = Array.from({length: totalWeeks}, (_,i) => buildWeekTemplate(i+1));
 
   // ---------- Persistence ----------
-  const STORAGE_KEY = `hm_plan_${RACE_DATE_STR}_v1`;
+  const STORAGE_KEY = `hm_plan_${RACE_DATE_STR}_v3`; // bumped because we added fields
   function loadState(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -759,13 +773,17 @@
       for (const s of w.sessions){
         perSession[s.id] = {
           done: false,
-          day: s.defaultDay
+          day: s.defaultDay,
+          // new: actual stats
+          actualKm: null,   // number
+          timeMin: null     // total minutes (integer)
         };
       }
     }
     return {
       meta: {
         raceDate: RACE_DATE_STR,
+        planStart: PLAN_START_STR,
         planDays: PLAN_DAYS,
         createdAt: new Date().toISOString()
       },
@@ -784,7 +802,13 @@
       if (!state.perSession[id]) state.perSession[id] = val;
       if (typeof state.perSession[id].done !== "boolean") state.perSession[id].done = false;
       if (!state.perSession[id].day) state.perSession[id].day = val.day;
+
+      // new fields
+      if (state.perSession[id].actualKm === undefined) state.perSession[id].actualKm = null;
+      if (state.perSession[id].timeMin === undefined) state.perSession[id].timeMin = null;
     }
+    if (!state.meta) state.meta = def.meta;
+    if (!state.meta.planStart) state.meta.planStart = PLAN_START_STR;
     saveState(state);
   }
 
@@ -832,7 +856,6 @@
   }
 
   function combinedProgressPct(){
-    // simple blend: 65% training completion, 35% time progress
     const tp = timeProgress();
     const {total, done} = countProgress();
     const tr = total ? Math.round((done/total)*100) : 0;
@@ -862,7 +885,6 @@
   }
 
   function weekSummaryText(w){
-    // km estimate: sum only run-type sessions
     let km = 0;
     for (const s of w.sessions){
       const m = s.name.match(/(\d+)\s*km/i);
@@ -873,7 +895,7 @@
   }
 
   function validateNoCollisions(w){
-    const used = new Map(); // dayKey -> sessionId
+    const used = new Map();
     const collisions = [];
     for (const s of w.sessions){
       const day = state.perSession[s.id]?.day || s.defaultDay;
@@ -881,103 +903,6 @@
       else used.set(day, s.id);
     }
     return collisions;
-  }
-
-  function renderWeek(wIndex0){
-    const w = plan[wIndex0];
-    const {weekMon, weekSun} = weekDateRange(wIndex0);
-
-    $("weekTitle").textContent = `Woche ${w.week} von ${totalWeeks}`;
-    $("weekDates").textContent = `${fmtDate(weekMon)} – ${fmtDate(weekSun)}`;
-    $("weekSummary").textContent = weekSummaryText(w);
-
-    $("jumpWeek").value = String(wIndex0);
-
-    const container = $("sessions");
-    container.innerHTML = "";
-
-    // sort sessions by day index (for nicer view)
-    const sessionsSorted = [...w.sessions].sort((a,b) => {
-      const da = DAY_KEYS.indexOf(state.perSession[a.id]?.day || a.defaultDay);
-      const db = DAY_KEYS.indexOf(state.perSession[b.id]?.day || b.defaultDay);
-      return da - db;
-    });
-
-    for (const s of sessionsSorted){
-      const st = state.perSession[s.id] || {done:false, day:s.defaultDay};
-      const dayLabel = dayKeyToLabel(st.day);
-
-      const div = document.createElement("div");
-      div.className = "session" + (st.done ? " done" : "");
-      div.dataset.sid = s.id;
-
-      div.innerHTML = `
-        <div class="check" title="Abhaken" role="button" aria-label="Abhaken">${st.done ? "✓" : ""}</div>
-        <div>
-          <div class="sTitle">
-            ${sessionTypePill(s)}
-            <span class="sName">${s.name}</span>
-            <span class="pill" title="Geplant für diesen Tag">${dayLabel}</span>
-          </div>
-          <div class="sDesc">${s.desc}</div>
-        </div>
-        <div class="sRight">
-          <div class="daySel">
-            <span>Tag</span>
-            <select aria-label="Tag ändern">
-              ${DAY_KEYS.map(k => `<option value="${k}" ${k===st.day ? "selected":""}>${dayKeyToLabel(k)}</option>`).join("")}
-            </select>
-          </div>
-        </div>
-      `;
-
-      // Toggle done
-      div.querySelector(".check").addEventListener("click", () => {
-        const cur = state.perSession[s.id] || {done:false, day:s.defaultDay};
-        cur.done = !cur.done;
-        state.perSession[s.id] = cur;
-        saveState(state);
-        updateTopProgress();
-        renderWeek(wIndex0);
-      });
-
-      // Change day with collision logic
-      const sel = div.querySelector("select");
-      sel.addEventListener("change", () => {
-        const newDay = sel.value;
-        const cur = state.perSession[s.id] || {done:false, day:s.defaultDay};
-
-        // check collision inside this week
-        const taken = new Set();
-        for (const other of w.sessions){
-          if (other.id === s.id) continue;
-          const od = state.perSession[other.id]?.day || other.defaultDay;
-          taken.add(od);
-        }
-        if (taken.has(newDay)){
-          // revert + show warning
-          sel.value = cur.day;
-          showWarning(`Nicht erlaubt: Es gibt in dieser Woche bereits eine Einheit am ${dayKeyToLabel(newDay)}. (Regel: keine 2 Einheiten am selben Tag.)`);
-          return;
-        }
-
-        cur.day = newDay;
-        state.perSession[s.id] = cur;
-        saveState(state);
-        hideWarning();
-        renderWeek(wIndex0);
-      });
-
-      container.appendChild(div);
-    }
-
-    // week collision check (should not happen unless state edited externally)
-    const col = validateNoCollisions(w);
-    if (col.length){
-      showWarning("Achtung: In dieser Woche kollidieren Einheiten auf dem gleichen Tag. Bitte passe die Tage rechts an.");
-    } else {
-      hideWarning();
-    }
   }
 
   function showWarning(msg){
@@ -989,6 +914,88 @@
     const w = $("warnLine");
     w.style.display = "none";
     w.textContent = "";
+  }
+
+  // ---------- Stats helpers ----------
+  function parseFloatSafe(x){
+    if (x === null || x === undefined || x === "") return null;
+    const v = Number(String(x).replace(",", "."));
+    return Number.isFinite(v) && v > 0 ? v : null;
+  }
+  function parseIntSafe(x){
+    const v = Number(x);
+    return Number.isFinite(v) && v >= 0 ? Math.floor(v) : null;
+  }
+  function fmtTimeFromMinutes(min){
+    if (!Number.isFinite(min) || min <= 0) return "0:00";
+    const h = Math.floor(min / 60);
+    const m = Math.round(min % 60);
+    return `${h}:${String(m).padStart(2,"0")}`;
+  }
+  function fmtPace(minPerKm){
+    if (!Number.isFinite(minPerKm) || minPerKm <= 0) return "–";
+    const m = Math.floor(minPerKm);
+    const s = Math.round((minPerKm - m) * 60);
+    const ss = String(s === 60 ? 0 : s).padStart(2,"0");
+    const mm = (s === 60) ? m+1 : m;
+    return `${mm}:${ss} min/km`;
+  }
+
+  function computeTotals(){
+    // Only run sessions with both actualKm and timeMin set
+    let totalKm = 0;
+    let totalMin = 0;
+    let count = 0;
+
+    for (const w of plan){
+      for (const s of w.sessions){
+        if (!s.isRun) continue;
+        const rec = state.perSession[s.id];
+        if (!rec) continue;
+        const km = parseFloatSafe(rec.actualKm);
+        const t = parseIntSafe(rec.timeMin);
+        if (km && t && km > 0 && t > 0){
+          totalKm += km;
+          totalMin += t;
+          count++;
+        }
+      }
+    }
+
+    const pace = (totalKm > 0) ? (totalMin / totalKm) : null; // minutes per km
+    const hmMin = (pace && Number.isFinite(pace)) ? (pace * HM_DISTANCE_KM) : null;
+
+    return { totalKm, totalMin, pace, hmMin, samples: count };
+  }
+
+  function updateStatsPanel(){
+    const { totalKm, totalMin, pace, hmMin, samples } = computeTotals();
+
+    $("totKm").textContent = `${totalKm.toFixed(1)} km`;
+    $("totTime").textContent = fmtTimeFromMinutes(totalMin);
+    $("avgPace").textContent = fmtPace(pace);
+    $("hmPred").textContent = hmMin ? fmtTimeFromMinutes(hmMin) : "–";
+
+    const title = $("predictMsgTitle");
+    const msg = $("predictMsg");
+
+    if (samples === 0){
+      title.textContent = "Start";
+      msg.textContent = "Trage nach deinen Läufen echte km + Zeit ein. Dann bekommst du eine Halbmarathon-Prognose und siehst deinen echten Fortschritt.";
+      return;
+    }
+
+    // motivational messaging based on volume
+    if (totalKm < 20){
+      title.textContent = "Momentum";
+      msg.textContent = `Stark: du hast schon ${totalKm.toFixed(1)} km geloggt. Noch ein paar Einheiten, dann wird die Prognose richtig stabil.`;
+    } else if (totalKm < 60){
+      title.textContent = "Solide Basis";
+      msg.textContent = `Du baust gerade eine echte Grundlage. Ø Pace: ${fmtPace(pace)} → HM-Prognose aktuell: ${hmMin ? fmtTimeFromMinutes(hmMin) : "–"}.`;
+    } else {
+      title.textContent = "Richtig gut";
+      msg.textContent = `Das ist ernsthaftes Training: ${totalKm.toFixed(1)} km insgesamt. Wenn du dranbleibst, wird der Race Day deutlich entspannter.`;
+    }
   }
 
   function updateTopProgress(){
@@ -1014,18 +1021,201 @@
     $("progressPct").textContent = `${combo}%`;
     $("progressBar").style.width = `${combo}%`;
 
-    // label text
     const label = (left <= 0) ? "Race Day 🎉" : "Gesamtfortschritt bis zum Race";
     $("progressLabel").textContent = label;
+
+    updateStatsPanel();
   }
 
   function resetAll(){
-    // Hard reset
     localStorage.removeItem(STORAGE_KEY);
     state = defaultState();
     saveState(state);
     updateTopProgress();
     renderWeek(currentWeekIndex());
+  }
+
+  function renderWeek(wIndex0){
+    const w = plan[wIndex0];
+    const {weekMon, weekSun} = weekDateRange(wIndex0);
+
+    $("weekTitle").textContent = `Woche ${w.week} von ${totalWeeks}`;
+    $("weekDates").textContent = `${fmtDate(weekMon)} – ${fmtDate(weekSun)}`;
+    $("weekSummary").textContent = weekSummaryText(w);
+
+    $("jumpWeek").value = String(wIndex0);
+
+    const container = $("sessions");
+    container.innerHTML = "";
+
+    const sessionsSorted = [...w.sessions].sort((a,b) => {
+      const da = DAY_KEYS.indexOf(state.perSession[a.id]?.day || a.defaultDay);
+      const db = DAY_KEYS.indexOf(state.perSession[b.id]?.day || b.defaultDay);
+      return da - db;
+    });
+
+    for (const s of sessionsSorted){
+      const st = state.perSession[s.id] || {done:false, day:s.defaultDay, actualKm:null, timeMin:null};
+      const dayLabel = dayKeyToLabel(st.day);
+
+      const div = document.createElement("div");
+      div.className = "session" + (st.done ? " done" : "");
+      div.dataset.sid = s.id;
+
+      const kmVal = (st.actualKm === null || st.actualKm === undefined) ? "" : String(st.actualKm);
+      const totalMin = (st.timeMin === null || st.timeMin === undefined) ? "" : String(st.timeMin);
+      let hh = "", mm = "";
+      if (totalMin !== ""){
+        const t = parseIntSafe(totalMin);
+        if (t !== null){
+          hh = String(Math.floor(t/60));
+          mm = String(t%60);
+        }
+      }
+
+      // inputs for run sessions only
+      const runInputsHtml = s.isRun ? `
+        <div class="daySel" title="Tatsächliche Werte (optional)">
+          <span>km</span>
+          <input id="${s.id}-km" inputmode="decimal" placeholder="z.B. 4,0" value="${kmVal}"
+                 style="width:120px" />
+        </div>
+        <div class="daySel" title="Zeit (Stunden/Minuten)">
+          <span>Zeit</span>
+          <input id="${s.id}-h" inputmode="numeric" placeholder="h" value="${hh}" style="width:54px" />
+          <input id="${s.id}-m" inputmode="numeric" placeholder="min" value="${mm}" style="width:54px" />
+        </div>
+      ` : `
+        <div class="daySel" title="Keine Lauf-Einheit – optional leer lassen">
+          <span>km</span>
+          <input disabled placeholder="–" style="width:120px;opacity:.7" />
+        </div>
+        <div class="daySel" title="Keine Lauf-Einheit – optional leer lassen">
+          <span>Zeit</span>
+          <input disabled placeholder="–" style="width:54px;opacity:.7" />
+          <input disabled placeholder="–" style="width:54px;opacity:.7" />
+        </div>
+      `;
+
+      div.innerHTML = `
+        <div class="check" title="Abhaken" role="button" aria-label="Abhaken">${st.done ? "✓" : ""}</div>
+        <div>
+          <div class="sTitle">
+            ${sessionTypePill(s)}
+            <span class="sName">${s.name}</span>
+            <span class="pill" title="Geplant für diesen Tag">${dayLabel}</span>
+          </div>
+          <div class="sDesc">${s.desc}</div>
+        </div>
+        <div class="sRight">
+          <div class="daySel">
+            <span>Tag</span>
+            <select aria-label="Tag ändern">
+              ${DAY_KEYS.map(k => `<option value="${k}" ${k===st.day ? "selected":""}>${dayKeyToLabel(k)}</option>`).join("")}
+            </select>
+          </div>
+          ${runInputsHtml}
+        </div>
+      `;
+
+      // Make inputs visually consistent with existing controls without touching CSS:
+      // we reuse existing select/button styles by applying same base styles inline for inputs.
+      const inputs = div.querySelectorAll("input");
+      inputs.forEach(inp => {
+        inp.style.fontFamily = "var(--sans)";
+        inp.style.fontSize = "13px";
+        inp.style.color = "var(--text)";
+        inp.style.background = "rgba(255,255,255,.06)";
+        inp.style.border = "1px solid var(--line)";
+        inp.style.borderRadius = "12px";
+        inp.style.padding = "8px 10px";
+        inp.style.outline = "none";
+      });
+
+      // Toggle done
+      div.querySelector(".check").addEventListener("click", () => {
+        const cur = state.perSession[s.id] || {done:false, day:s.defaultDay, actualKm:null, timeMin:null};
+        cur.done = !cur.done;
+        state.perSession[s.id] = cur;
+        saveState(state);
+        updateTopProgress();
+        renderWeek(wIndex0);
+      });
+
+      // Change day with collision logic
+      const daySelect = div.querySelector("select");
+      daySelect.addEventListener("change", () => {
+        const newDay = daySelect.value;
+        const cur = state.perSession[s.id] || {done:false, day:s.defaultDay, actualKm:null, timeMin:null};
+
+        const taken = new Set();
+        for (const other of w.sessions){
+          if (other.id === s.id) continue;
+          const od = state.perSession[other.id]?.day || other.defaultDay;
+          taken.add(od);
+        }
+        if (taken.has(newDay)){
+          daySelect.value = cur.day;
+          showWarning(`Nicht erlaubt: Es gibt in dieser Woche bereits eine Einheit am ${dayKeyToLabel(newDay)}. (Regel: keine 2 Einheiten am selben Tag.)`);
+          return;
+        }
+
+        cur.day = newDay;
+        state.perSession[s.id] = cur;
+        saveState(state);
+        hideWarning();
+        renderWeek(wIndex0);
+      });
+
+      // Save actual km/time (only for run sessions)
+      if (s.isRun){
+        const kmInput = div.querySelector(`#${CSS.escape(s.id)}-km`);
+        const hInput  = div.querySelector(`#${CSS.escape(s.id)}-h`);
+        const mInput  = div.querySelector(`#${CSS.escape(s.id)}-m`);
+
+        const saveActual = () => {
+          const cur = state.perSession[s.id] || {done:false, day:s.defaultDay, actualKm:null, timeMin:null};
+
+          const km = parseFloatSafe(kmInput.value);
+          const h = parseIntSafe(hInput.value);
+          const m = parseIntSafe(mInput.value);
+
+          // time only valid if at least minutes or hours set
+          let tMin = null;
+          if ((h !== null && h > 0) || (m !== null && m > 0)){
+            const hh = h !== null ? h : 0;
+            const mm = m !== null ? m : 0;
+            const combined = (hh*60) + mm;
+            tMin = combined > 0 ? combined : null;
+          }
+
+          cur.actualKm = km;
+          cur.timeMin = tMin;
+
+          state.perSession[s.id] = cur;
+          saveState(state);
+          updateTopProgress();
+        };
+
+        // Persist on blur/change (keeps typing smooth)
+        kmInput.addEventListener("blur", saveActual);
+        hInput.addEventListener("blur", saveActual);
+        mInput.addEventListener("blur", saveActual);
+
+        kmInput.addEventListener("keydown", (e) => { if (e.key === "Enter") kmInput.blur(); });
+        hInput.addEventListener("keydown", (e) => { if (e.key === "Enter") hInput.blur(); });
+        mInput.addEventListener("keydown", (e) => { if (e.key === "Enter") mInput.blur(); });
+      }
+
+      container.appendChild(div);
+    }
+
+    const col = validateNoCollisions(w);
+    if (col.length){
+      showWarning("Achtung: In dieser Woche kollidieren Einheiten auf dem gleichen Tag. Bitte passe die Tage rechts an.");
+    } else {
+      hideWarning();
+    }
   }
 
   // ---------- Init ----------
@@ -1053,7 +1243,7 @@
     renderWeek(weekIdx);
   });
   $("resetAll").addEventListener("click", () => {
-    const ok = confirm("Wirklich alles zurücksetzen? Alle Haken & Verschiebungen gehen verloren.");
+    const ok = confirm("Wirklich alles zurücksetzen? Alle Haken, Verschiebungen und Laufdaten gehen verloren.");
     if (ok) resetAll();
   });
 
